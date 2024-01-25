@@ -1,0 +1,215 @@
+/**
+ * ----------------------------------------
+ * generals settings
+ * ----------------------------------------
+ */
+.body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body {
+  position: relative;
+  width:100%;
+  height: 100vh;
+  position: fixed;
+  overflow: hidden;
+}
+
+.background {
+  width: 100%;
+  background-repeat: no-repeat; 
+  background-size: cover;
+}
+
+
+
+#firstAct {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+/**
+ * ----------------------------------------
+ * Pictures settings
+ * ----------------------------------------
+ */
+ 
+.console, .controllers, .tvPic {
+  width:25%;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.console {
+  margin-left: 7%;
+}
+
+.controllers {
+  margin-bottom: -5%;
+  margin-left:-5% ;
+}
+
+.tvScreen {
+  z-index: 1;
+  position: absolute;
+  width:5%;
+  left: 45%;
+  top: 27%;
+  opacity: 0;
+  object-fit: contain;
+}
+
+.musicButtonT {
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.musicButton {
+  z-index: 4;
+  position: absolute;
+  color: white;
+  top:5%;
+  width:5%;
+  height: 5%;
+  right: 2%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.playButton {
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  font-family: 'Press Start 2P', system-ui;
+  color: white;
+  font-size: 150px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.295);
+}
+
+/**
+ * ----------------------------------------
+ * Characters 
+ * ----------------------------------------
+ */
+.anibus, .hardile {
+  position:absolute;
+  bottom:14%;
+  width:2.3%;
+}
+
+.anibus {
+  left:30%;
+}
+
+.hardile {
+  right:30%;
+}
+
+.anibusTeam {
+  opacity: 0;
+}
+
+/**
+ * ----------------------------------------
+ * animations 
+ * ----------------------------------------
+ */
+.textBlink {
+  animation: textBlink 2s infinite;
+}
+
+.bounceAnimation {
+  animation: bounce2 3s ease-in-out forwards;
+}
+
+.rotateCenter {
+  animation: rotateCenter 2s ease-in-out both;
+}
+
+/**
+ * ----------------------------------------
+ * animation bounce
+ * ----------------------------------------
+ */
+@keyframes bounce2 {
+  0% {
+    bottom: 100%;
+  }
+  40% {
+    bottom: 10%
+  }
+  55% {
+    bottom: 20%
+  }
+  65% {
+    bottom: 12%
+  }
+  75% {
+    bottom: 20%
+  }
+  85% {
+    bottom: 17%
+  }
+  
+  100% {
+    bottom: 20%;
+  }
+}
+
+/**
+ * ----------------------------------------
+ * animation rotate-center
+ * ----------------------------------------
+ */
+
+@keyframes rotateCenter {
+  0% {
+    transform: rotate(0) scale(0);
+  }
+
+  100% {
+    transform: rotate(360deg) ;
+    width:100%;
+    left:0;
+    top:0;
+
+  }
+}
+
+/**
+ * ----------------------------------------
+ * animation rotate-center
+ * ----------------------------------------
+ */
+
+ @keyframes textBlink {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
