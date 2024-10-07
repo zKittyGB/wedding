@@ -1,0 +1,507 @@
+/**
+ * ----------------------------------------
+ * generals settings
+ * ----------------------------------------
+ */
+
+.visible {
+	display:block;
+}
+
+.hidden {
+	display:none;
+}
+
+.skip {
+	position: absolute;
+	top: 2.7em;
+	left:3em;
+	font-size: 1.2em;
+	color:white;
+	opacity: 0;
+	z-index: 1000;
+}
+
+.body {
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+#root {
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	background-color: black;
+}
+
+body {
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	position: fixed;
+	overflow: hidden;
+}
+
+.background {
+	height: 100vh;
+	opacity: 1;
+}
+
+.backgroundAct2 {
+	height: 100vh;
+	transform: scale(0);
+}
+
+#firstAct,
+#secondAct,
+.sectionDefragment {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	box-shadow: inset 0px 0px 50px 28px rgba(0, 0, 0, 0);
+}
+
+/**
+ * ----------------------------------------
+ * Login settings
+ * ----------------------------------------
+ */
+
+.loginContainer {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.658);
+	z-index: 101;
+}
+
+.loginContainer form {
+	width: 350px;
+	height: 200px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 1em;
+	border-radius: 5px;
+	background-color: rgb(49, 48, 47);
+	box-shadow: 0px 0px 5px 1px rgba(110, 108, 108, 0.5);
+	border: 10px solid rgba(177, 178, 180, 0.192);
+	z-index: 101;
+}
+
+.loginContainer form span {
+	color: white;
+	margin-bottom: 1em;
+}
+
+.loginContainer input {
+	margin-top: 0.5em;
+	width: 60%;
+	height: 1em;
+	border-radius: 5px;
+	font-size: 1em;
+	padding: 0.5em;
+	margin-bottom: 1em;
+}
+
+.loginContainer button[type="submit"] {
+	width: 40%;
+	background-color: rgb(190, 119, 37);
+	color: white;
+	border: none;
+	padding: 0.5em 1em;
+	border-radius: 5px;
+	font-size: 1em;
+	cursor: pointer;
+}
+
+/**
+ * ----------------------------------------
+ * Pictures settings
+ * ----------------------------------------
+ */
+
+.tvScreenContainer {
+	position: absolute;
+	width: 18.5%;
+	height: 24%;
+	left: 50.5%;
+	top: 44.8%;
+	/* object-fit: contain; */
+	transform: translate(-50%, -50%);
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.tvScreen {
+	z-index: 1;
+	transform: scaleX(0);
+	width: 100%;
+	opacity: 0;
+	object-fit: contain;
+	margin: 0;
+}
+
+.musicButtonT {
+	z-index: 4;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+.musicButton {
+	z-index: 4;
+	position: absolute;
+	color: white;
+	top: 5%;
+	width: 5%;
+	height: 5%;
+	right: 2%;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.playButton {
+	z-index: 101;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	font-family: "Press Start 2P", system-ui;
+	color: white;
+	font-size: 150px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: rgba(0, 0, 0, 0.295);
+}
+
+.comContainer {
+	position: absolute;
+	bottom: 5%;
+	width: 1000px;
+	height: 350px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	left: 50%;
+	right: 50%;
+	transform: scale(0) translateX(-50%);
+}
+
+.comAvatar {
+	position: absolute;
+	top: 50%;
+	left: 25%;
+	transform: translateY(-50%);
+	width: 250px;
+	height: 250px;
+}
+
+.hideItem {
+	width: 490px;
+	height: 250px;
+	margin-left: 30%;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.comText {
+	width: 440px;
+	height: 220px;
+	transform: translateX(-85%);
+}
+
+.comContainer p {
+	position: absolute;
+	width: 270px;
+	height: 163px;
+	font-size: 0.8em;
+	text-align: left;
+	color: white;
+	top: 36%;
+	left: 64%;
+	transform: translate(-50%);
+	white-space: pre-line;
+	/* opacity:0; */
+}
+
+/**
+ * ----------------------------------------
+ * animations 
+ * ----------------------------------------
+ */
+.textBlink {
+	animation: textBlink 2s infinite;
+}
+
+.screenTurnOn {
+	animation: screenTurnOn 0.15s ease-in-out forwards;
+}
+
+.dialogTurnOff {
+	animation: dialogTurnOff 0.15s ease-in-out forwards;
+}
+
+.dialogTurnOn {
+	animation: dialogTurnOn 1s ease-in-out forwards;
+}
+
+.rotateCenter {
+	animation: rotateCenter 2s ease-in-out both;
+}
+
+.blinkScreen {
+	animation: blinkScreen 1s infinite alternate;
+}
+.backgroundBlink {
+	animation: backgroundBlink 1s infinite;
+}
+
+.avatarAppear {
+	animation: avatarAppear 0.5s forwards;
+}
+.avatarDisappear {
+	animation: avatarDisappear 0.5s forwards;
+}
+
+.openDialAnimation {
+	animation: openDial 1.3s forwards;
+	animation-delay: 1s;
+}
+
+.closeDialAnimation {
+	animation: closeDial 1.3s forwards;
+}
+
+/**
+ * ----------------------------------------
+ * animation screenTurnOn
+ * ----------------------------------------
+ */
+@keyframes screenTurnOn {
+	0% {
+		transform: scaleX(0);
+	}
+
+	100% {
+		transform: scaleX(1);
+	}
+}
+@keyframes fall {
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(300px);
+	}
+}
+
+.fallAnimation {
+	animation: fall 1s ease;
+}
+/**
+ * ----------------------------------------
+ * animation dialog
+ * ----------------------------------------
+ */
+@keyframes dialogTurnOn {
+	0% {
+		transform: scale(0)  translateX(-50%);
+	}
+
+	100% {
+		transform: scale(1) translateX(-50%);
+	}
+}
+
+@keyframes dialogTurnOff {
+	0% {
+		transform: scale(1) translateX(-50%);
+	}
+
+	100% {
+		transform: scale(0) translateX(-50%);
+	}
+}
+
+@keyframes openDial {
+	0% {
+		transform: translateX(-85%);
+	}
+
+	100% {
+		transform: translateX(-5%);
+	}
+}
+
+@keyframes closeDial {
+	0% {
+		transform: translateX(-5%);
+	}
+
+	100% {
+		transform: translateX(-85%);
+	}
+}
+
+@keyframes avatarAppear {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes avatarDisappear {
+	0% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+/**
+ * ----------------------------------------
+ * animation blinkScreen
+ * ----------------------------------------
+ */
+@keyframes blinkScreen {
+	0% {
+		opacity: 1;
+		animation-timing-function: ease-in;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.5;
+		animation-timing-function: ease-out;
+		transform: scale(1);
+	}
+	100% {
+		opacity: 1;
+		animation-timing-function: ease-in;
+		transform: scale(1);
+	}
+}
+
+/**
+ * ----------------------------------------
+ * animation rotate-center
+ * ----------------------------------------
+ */
+
+@keyframes rotateCenter {
+	0% {
+		transform: rotate(0) scale(0);
+	}
+
+	100% {
+		transform: rotate(360deg);
+		width: 100%;
+		left: 0;
+		top: 0;
+	}
+}
+
+/**
+ * ----------------------------------------
+ * animation textBlink
+ * ----------------------------------------
+ */
+
+@keyframes textBlink {
+	0% {
+		opacity: 0;
+	}
+
+	50% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+/**
+ * ----------------------------------------
+ * animation backgroundBlink
+ * ----------------------------------------
+ */
+
+@keyframes backgroundBlink {
+	0% {
+		box-shadow: inset 0px 0px 50px 28px rgba(0, 0, 0, 0);
+	}
+
+	50% {
+		box-shadow: inset 0px 0px 50px 28px rgba(0, 0, 0, 1);
+	}
+
+	100% {
+		box-shadow: inset 0px 0px 50px 28px rgba(0, 0, 0, 0);
+	}
+}
+
+
+.pictToDefragment {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	/* background-image: url("/public/images/bgAct2vf.jpg"); */
+	background-image: url("/public/images/bgAct1.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	opacity: 0;
+}
+
+.blockToDefragment {
+	opacity: 1;
+	position: absolute;
+	background-image: url("/public/images/bgAct1.jpg");
+	background-size: 5000% 2500%;
+	background-repeat: no-repeat;
+}
+
+.pictureFall {
+	animation: defragmentPic 1.3s forwards;
+}
+
+/**
+ * ----------------------------------------
+ * defragmentPic
+ * ----------------------------------------
+ */
+
+@keyframes defragmentPic {
+	0% {
+	}
+	100% {
+		-webkit-transform: translateY(-1000px);
+		transform: translateY(-1000px);
+		opacity: 0;
+	}
+}

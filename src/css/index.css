@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family: 'Press Start 2P', system-ui;
+  font-size: 12px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Landscape orientation */
+@media only screen and (orientation: portrait) {
+	body {
+		rotate: 90deg;
+	}
+}

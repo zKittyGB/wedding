@@ -1,0 +1,612 @@
+@import url("https://fonts.googleapis.com/css2?family=Changa:wght@200..800&family=Jacquard+12&family=MedievalSharp&display=swap");
+.fontMenu {
+	font-family: "Changa", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-size: 1em;
+}
+
+.hidden {
+	opacity: 0;
+}
+
+#secondAct {
+	display: flex;
+}
+
+/**
+ * ----------------------------------------
+ * Nuages 
+ * ----------------------------------------
+ */
+.nuage {
+	position: absolute;
+	transform: scale(0.5);
+	opacity: 0;
+	z-index: 0;
+	width: 30%;
+}
+
+.animatedOnce {
+	animation: translateX 200s linear forwards;
+}
+
+.nuage1 {
+	right: 0px;
+	top: 20%;
+}
+
+.nuage2 {
+	right: 500px;
+	top: 80%;
+}
+
+.nuage3 {
+	right: 150px;
+	top: 65%;
+}
+
+.nuage4 {
+	right: 750px;
+	top: 65%;
+}
+
+.nuage5 {
+	right: 200px;
+	top: 12%;
+}
+
+.nuage6 {
+	right: 700px;
+	top: 10%;
+}
+
+.nuage7 {
+	right: 1200px;
+	top: 40%;
+}
+
+.nuage8 {
+	right: 1400px;
+}
+
+.nuage9 {
+	right: 1200px;
+	top: 60%;
+}
+
+.nuage10 {
+	right: 800px;
+	top: 30%;
+}
+
+.nuage1Infini {
+	right: -190px;
+	animation: translateX 200s linear infinite;
+	animation-delay: 150s;
+}
+
+.nuage2Infini {
+	right: -165px;
+	animation: translateX 200s linear infinite;
+	animation-delay: 90s;
+}
+
+.nuage3Infini {
+	right: -300px;
+	animation: translateX 200s linear infinite;
+	animation-delay: 110s;
+}
+
+.nuage4Infini {
+	right: -300px;
+	animation: translateX 200s linear infinite;
+	animation-delay: 54s;
+}
+
+.nuage5Infini {
+	right: -400px;
+	animation: translateX 200s linear infinite;
+	animation-delay: 94s;
+}
+
+.nuage6Infini {
+	right: -430px;
+	animation: translateX 200s linear infinite;
+	animation-delay: 47s;
+}
+
+.nuage7Infini {
+	right: -380px;
+	animation: translateX 200s linear infinite;
+	animation-delay: 7s;
+}
+
+.nuage8Infini {
+	right: -380px;
+	animation: translateX 200s linear infinite;
+}
+
+.nuage9Infini {
+	right: -550px;
+	animation: translateX 200s linear infinite;
+}
+
+.nuage10Infini {
+	right: -270px;
+	animation: translateX 200s linear infinite;
+	animation-delay: 52s;
+}
+
+/**
+ * ----------------------------------------
+ * Key frames Nuages
+ * ----------------------------------------
+ */
+
+@keyframes translateX {
+	0% {
+		transform: scale(0.6) translateX(0%);
+	}
+
+	100% {
+		transform: scale(0.6) translateX(-200vw);
+	}
+}
+
+/**
+ * ----------------------------------------
+ * Dirigeable 
+ * ----------------------------------------
+ */
+
+.dirigeableContainer {
+	position: absolute;
+	right: 3%;
+	top: 25%;
+	width: 45%;
+	height: 100vh;
+	animation: dirigable1 25s linear infinite;
+}
+
+.dirigeable {
+	width: 100%;
+	object-fit: contain;
+}
+
+.helice {
+	position: absolute;
+	width: 7%;
+	top: 15.8%;
+	left: 34.9%;
+	animation: rotate 2s linear infinite;
+}
+
+/**
+ * ----------------------------------------
+ * Key frames Dirigeable
+ * ----------------------------------------
+ */
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0) scale(0.6);
+	}
+
+	100% {
+		transform: rotate(360deg) scale(0.6);
+	}
+}
+
+@keyframes dirigable1 {
+	0% {
+		transform: translateX(0) translateY(0);
+	}
+
+	12% {
+		transform: translateX(-8px) translateY(8px);
+	}
+
+	24% {
+		transform: translateX(0px) translateY(16px);
+	}
+
+	36% {
+		transform: translateX(8px) translateY(8px);
+	}
+
+	48% {
+		transform: translateX(0px) translateY(0);
+	}
+
+	60% {
+		transform: translateX(8px) translateY(-8px);
+	}
+
+	72% {
+		transform: translateX(0px) translateY(-16px);
+	}
+
+	84% {
+		transform: translateX(-8px) translateY(-8px);
+	}
+}
+
+/**
+ * ----------------------------------------
+ * Menu 
+ * ----------------------------------------
+ */
+
+.menu {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	margin-left: 4%;
+	width: 45%;
+	z-index: 100;
+	opacity: 0;
+	background-color: rgba(29, 27, 27, 0.959);
+	padding: 1em;
+	box-sizing: border-box;
+	height: 70%;
+	border-radius: 10px;
+}
+
+@media only screen and (max-height: 768px) {
+	.menu {
+		width: 90%;
+		margin-left: 0;
+		top:50%;
+		left:50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+.menuHeader {
+	border-radius: 10px 10px 0 0;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 3em;
+	background-color: rgb(224, 220, 220);
+	display: flex;
+}
+
+.menuHeader::before {
+	content: "Menu";
+	position: absolute;
+	top: -1.1em;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 0.7em 1.5em 0.7em 1.5em;
+	background-color: black;
+	color: white;
+	border-radius: 30px;
+	font-size: 0.8em;
+}
+
+.menuHeader > div {
+	width: 3em;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.menuHeader > div:hover {
+	background-color: rgb(165, 163, 163);
+}
+.menuHeader > div:hover:first-of-type {
+	border-radius: 10px 0 0 0;
+}
+
+.appearMenu {
+	animation: appearMenu 0.3s linear forwards;
+}
+
+@keyframes appearMenu {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+/**
+ * ----------------------------------------
+ * DIAL
+ * ----------------------------------------
+ */
+
+.fontMenu {
+	opacity: 0;
+	z-index: 0;
+	position: absolute;
+	text-align: left;
+	height: calc(100% - 5em);
+	width: calc(100% - 2em);
+	margin-top: 3em;
+	color: white;
+	overflow: scroll;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+.homeText {
+	z-index: 1;
+	opacity: 1;
+}
+
+.blueFireworks {
+	position: absolute;
+	right: 10%;
+	top: 5%;
+	width: 200px;
+	height: 200px;
+}
+
+.blueBis {
+	top: 75%;
+	right: 15%;
+}
+
+.blueTris {
+	top: 40%;
+	right: 40%;
+}
+
+.greenFireworks {
+	position: absolute;
+	right: 25%;
+	top: 25%;
+	width: 200px;
+	height: 200px;
+}
+
+.greenBis {
+	top: 60%;
+	right: 0;
+}
+
+.yellowFireworks {
+	position: absolute;
+	right: 30%;
+	top: 70%;
+	width: 200px;
+	height: 200px;
+}
+
+.yellowBis {
+	right: 35%;
+	top: 8%;
+}
+.yellowTris {
+	right: 0%;
+	top: 30%;
+}
+
+form {
+	height: 100%;
+	padding: 0;
+}
+
+fieldset {
+	width: calc(100% - 2em);
+	display: flex;
+	flex-direction: column;
+}
+
+.labelToggle {
+	display: inline-block;
+	position: relative;
+	height: 20px;
+	width: 40px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	background-color: grey;
+	border-radius: 15px;
+	cursor: pointer;
+}
+
+.labelToggle::after {
+	content: "";
+	position: absolute;
+	left: 1%;
+	height: 100%;
+	width: 20px;
+	border-radius: 15px;
+	background-color: rgb(255, 255, 255);
+}
+
+.checkboxToggle {
+	opacity: 0;
+	position: absolute;
+}
+
+.checkboxToggle:checked + label:after {
+	transform: translateX(119%);
+}
+.checkboxToggle:checked + label {
+	background-color: rgb(170, 149, 28);
+}
+
+.vip {
+	border:2px solid green;
+	/* display:none; */
+}
+
+.calendarText,
+.infoText,
+.homeText,
+.mailText {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 1.2em;
+	overflow: scroll;
+}
+
+.calendarText h1,
+.infoText h1,
+.homeText h1,
+.mailText h1 {
+	width: 100%;
+	margin-top: 0;
+	margin-bottom: 0em;
+	font-size: 2em;
+	text-align: center;
+}
+
+.calendarText h2,
+.infoText h2,
+.homeText h2,
+.mailText h2 {
+	margin:0;
+	font-size: 1.8em;
+}
+b {
+	color: rgb(145, 143, 143);
+}
+.calendarText h2, .calendarText h3 {
+	margin:0;
+}
+
+.calendarText h3 {
+	margin-bottom: 0.5em;
+}
+
+.calendarText h3::before {
+	font-family: "Font Awesome 6 Free";
+	margin-left: -1.2em;
+	margin-top: 0.4em;
+	display: inline-block;
+	position: absolute;
+	font-weight: 600;
+	color: white;
+	content: "\f3c5"
+}
+
+.infoText h2 {
+	font-size: 1.6em;
+	width:100%;
+	text-align: left;
+}
+.infoText p {
+	width: 100%;
+}
+
+.lightbox {
+	position: relative;
+	/* width: calc(100% - 2em); */
+	width: 100%;
+	min-height: 250px;
+	padding: 0.5em;
+	box-sizing: border-box;
+	border-radius: 5px;
+	background-color: rgb(240, 248, 255);
+}
+
+.lightbox img {
+	border-radius: 5px;
+	position: absolute;
+	width: calc(100% - 1em);
+	height: calc(100% - 1em);
+	object-fit: cover;
+	object-position: center;
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.fade-out {
+	animation: fadeOut 1s forwards;
+}
+
+.fade-in {
+	animation: fadeIn 1s forwards;
+}
+
+.guessFeedback {
+	height: auto;
+	width:100%;
+	padding: 1em;
+}
+
+.guessFeedback button[type="submitParticipation"]:hover {
+	background-color: rgb(100, 59, 12);
+}
+.guessFeedback button[type="submitParticipation"] {
+	width: 100%;
+	background-color: rgb(190, 119, 37);
+	color: white;
+	border: none;
+	padding: 0.5em 1em;
+	border-radius: 0 0 5px 5px;
+	font-size: 1em;
+	cursor: pointer;
+}
+
+.guessFeedback table {
+	width: 100%;
+	border-collapse: collapse;
+	padding: 0;
+	margin:0;
+}
+
+
+.guessFeedback table th, 
+.guessFeedback table th {
+	margin:0;
+	padding: 0;
+}
+
+.guessFeedback table th:not(:first-of-type), 
+.guessFeedback table td:not(.hidden) {
+	border: 2px solid rgb(190, 119, 37);
+	text-align: center;
+	margin: 0;	
+}
+
+.guessFeedback table td {
+	height: 3em;
+}
+
+.guessFeedback table select {
+	cursor:pointer;
+	width:6em;
+	height: 2em;
+	border-radius: 5px;
+}
+
+.guessFeedback table td div{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.guessFeedback h1,
+.guessFeedback p {
+	width:100%;
+	text-align: center;
+}
