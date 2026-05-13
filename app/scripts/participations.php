@@ -37,25 +37,6 @@ $partnerIsSleeping = isset($_POST['partnerIsSleeping']) && ($_POST['partnerIsSle
 $kidsComing = isset($_POST['kidsComing']) ? (int)$_POST['kidsComing'] : 0;
 $login = htmlspecialchars(trim($_POST['login']), ENT_QUOTES, 'UTF-8');
 
-// // Ajouter un débogage pour vérifier les données reçues
-// file_put_contents('debug.log', print_r($_POST, true), FILE_APPEND);
-
-// // Préparer la réponse
-// $response = array(
-//     "success" => true,
-//     "login" => $login,
-//     "kidsComing" => $kidsComing,
-//     "partnerIsSleeping" => $partnerIsSleeping,
-//     "partnerIsComingVIP" => $partnerIsComingVIP,
-//     "partnerIsComing" => $partnerIsComing,
-//     "isSleeping" => $isSleeping,
-//     "isComingVIP" => $isComingVIP,
-//     "isComing" => $isComing
-// );
-
-// echo json_encode($response);
-// exit;
-
 try {
     require_once __DIR__ . '/config/database.php';
 
@@ -67,15 +48,14 @@ try {
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['password'])) {
+   if ($user) {
         unset($user['password']);
-
         $response = [
             "success" => true,
             "user" => $user
         ];
     } else {
-        $errors[] = "Login ou mot de passe invalide";
+        $errors[] = "Utilisateur introuvable";
     }
 } catch (PDOException $e) {
     error_log($e->getMessage());
