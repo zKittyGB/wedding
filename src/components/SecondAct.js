@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../css/SecondAct.css";
-import { TypeAnimation } from "react-type-animation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faCalendar,
@@ -17,7 +16,7 @@ export default function SecondAct(props) {
 		isVIP,
 		isParent,
 		hasKnownPartner,
-		login,
+		csrfToken,
 		hasAnswered
 	} = props;
 
@@ -236,10 +235,12 @@ export default function SecondAct(props) {
 			formData.append("partnerIsComingVIP", partnerIsComingVIP);
 			formData.append("kidsComing", kidsComing);
 
-			formData.append("login", login);
-
 			fetch("https://axelnell-wedding.fr/backend/participations.php", {
 				method: "POST",
+				credentials: "include",
+				headers: {
+					"X-CSRF-Token": csrfToken,
+				},
 				body: formData,
 			})
 				.then((response) => response.json())
@@ -263,7 +264,7 @@ export default function SecondAct(props) {
 					console.error("Error:", error);
 				});
 		}
-	}, [formSented, login]);
+	}, [formSented, csrfToken, isComing, isSleeping, isComingVIP, partnerIsComing, partnerIsSleeping, partnerIsComingVIP, kidsComing, hasKnownPartner]);
 
 	return (
 		<section id="secondAct">
@@ -640,7 +641,7 @@ export default function SecondAct(props) {
 										</tr>
 									</tbody>
 								</table>
-								<button type="submitParticipation">Envoyer ma réponse</button>
+								<button type="submit">Envoyer ma réponse</button>
 								<fieldset className={isVIP ? "visible vip" : "hidden vip"}>
 									<legend>Qu'est-ce que le "V.I.P" :</legend>
 									<div>
