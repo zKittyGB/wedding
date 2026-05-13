@@ -57,53 +57,29 @@ $login = htmlspecialchars(trim($_POST['login']), ENT_QUOTES, 'UTF-8');
 // exit;
 
 try {
-    // Connexion à la base de données
-    $db_host = 'axelnetstaff.mysql.db'; // Adresse de l'hôte de la base de données
-    $db_name = 'axelnetstaff'; // Nom de la base de données
-    $db_user = 'axelnetstaff'; // Nom d'utilisateur MySQL
-    $db_pass = 'Its2PeoplyOutside'; // Mot de passe MySQL
+    require_once __DIR__ . '/config/database.php';
 
-    $db = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = Database::getInstance();
 
-    // Préparer la requête SQL pour mettre à jour les données
-    $stmt = $db->prepare("
-        UPDATE userlogin 
-        SET 
-            isComing = :isComing, 
-            isComingVIP = :isComingVIP, 
-            isSleeping = :isSleeping,
-            partnerIsComing = :partnerIsComing, 
-            partnerIsComingVIP = :partnerIsComingVIP, 
-            partnerIsSleeping = :partnerIsSleeping, 
-            kidsComing = :kidsComing, 
-            hasAnswered = true
-        WHERE login = :login
-    ");
-
-    // Lier les paramètres
-    $stmt->bindParam(':isComing', $isComing, PDO::PARAM_BOOL);
-    $stmt->bindParam(':isComingVIP', $isComingVIP, PDO::PARAM_BOOL);
-    $stmt->bindParam(':isSleeping', $isSleeping, PDO::PARAM_BOOL);
-    $stmt->bindParam(':partnerIsComing', $partnerIsComing, PDO::PARAM_BOOL);
-    $stmt->bindParam(':partnerIsComingVIP', $partnerIsComingVIP, PDO::PARAM_BOOL);
-    $stmt->bindParam(':partnerIsSleeping', $partnerIsSleeping, PDO::PARAM_BOOL);
-    $stmt->bindParam(':kidsComing', $kidsComing, PDO::PARAM_INT);
-    $stmt->bindParam(':login', $login, PDO::PARAM_STR);
-
-    // Exécuter la requête
+    $stmt = $db->prepare("SELECT * FROM userlogin WHERE login = :login");
+    $stmt->bindParam(":login", $login);
     $stmt->execute();
 
-    // Vérifier si des lignes ont été affectées
-    if ($stmt->rowCount() > 0) {
-        $response = array("success" => true, "message" => "Données mises à jour avec succès");
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user && password_verify($password, $user['password'])) {
+        unset($user['password']);
+
+        $response = [
+            "success" => true,
+            "user" => $user
+        ];
     } else {
-        $errors[] = "Aucune mise à jour effectuée. Vérifiez si le login est correct.";
-        $response = array("success" => false, "errors" => $errors);
+        $errors[] = "Login ou mot de passe invalide";
     }
 } catch (PDOException $e) {
-    $errors[] = "Erreur de connexion à la base de données : " . $e->getMessage();
-    $response = array("success" => false, "errors" => $errors);
+    error_log($e->getMessage());
+    $errors[] = "Erreur de connexion à la base de données";
 }
 
 // Retourner la réponse au format JSON
