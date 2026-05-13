@@ -24,6 +24,7 @@ function App() {
 	const [hasKnownPartner, setHasKnownPartner] = useState("");
 	const [hasAnswered, setHasAnswered] = useState("");
 	const [guessSex, setGuessSex] = useState("");
+	const [csrfToken, setCsrfToken] = useState("");
 
 	const soundRef = useRef(null);
 
@@ -245,18 +246,20 @@ function App() {
 
 			fetch("https://axelnell-wedding.fr/backend/login.php", {
 				method: "POST",
+				credentials: "include",
 				body: formData,
 			})
 				.then((response) => response.json())
 				.then((data) => {
 					if (data.success) {
 						setFirstName(data.user.firstname);
-						setIsVIP(data.user.isVIP == 0 ? false : true);
-						setHasAnswered(data.user.hasAnswered == 1 ? true : false);
+						setIsVIP(Number(data.user.isVIP) !== 0);
+						setHasAnswered(Number(data.user.hasAnswered) === 1);
 						setGuessSex(data.user.sexe);
 						setIsLogged(true);
 						setIsParent(data.user.hasChild != null ? true : false);
 						setHasKnownPartner(data.user.partnerFirstName != null ? data.user.partnerFirstName : false);
+						setCsrfToken(data.csrfToken || "");
 					} else {
 						const errors = Array.isArray(data.errors) ? data.errors : ["Erreur inconnue"];
 						alert("Envoie échoué : " + errors.join(", ")); // Affichez les erreurs dans l'alerte
@@ -351,7 +354,7 @@ function App() {
 								isVIP={isVIP}
 								isParent={isParent}
 								hasKnownPartner={hasKnownPartner}
-								login={login}
+								csrfToken={csrfToken}
 								guessSex={guessSex}
 								hasAnswered={hasAnswered}
 							/>
@@ -376,7 +379,7 @@ function App() {
 								isVIP={isVIP}
 								isParent={isParent}
 								hasKnownPartner={hasKnownPartner}
-								login={login}
+								csrfToken={csrfToken}
 								guessSex={guessSex}
 								hasAnswered={hasAnswered}
 							/>

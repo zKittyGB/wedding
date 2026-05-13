@@ -1,69 +1,48 @@
 <?php
-// Autoriser l'accès depuis n'importe quelle origine
-header("Access-Control-Allow-Origin: *");
-// Autoriser les méthodes GET, POST, OPTIONS
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-// Autoriser les en-têtes Content-Type et Authorization
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Vérifier la méthode de requête
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Répondre à la méthode OPTIONS avec un statut 200 OK
-    http_response_code(200);
-    exit();
+declare(strict_types=1);
+
+require_once __DIR__ . '/security.php';
+
+configureSecurityHeaders();
+handlePreflightRequest();
+startSecureSession();
+requirePostRequest();
+
+$login = normalizeStringInput('login');
+$password = normalizeStringInput('password');
+
+if ($login === '' || $password === '') {
+    jsonResponse(['success' => false, 'errors' => ['Login et mot de passe obligatoires']], 400);
 }
 
-// Initialisation des erreurs
-$errors = [];
+try {
+    require_once __DIR__ . '/config/database.php';
 
-// Vérifier si les données ont été envoyées via POST
-if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST['login']) || !isset($_POST['password'])) {
-    $errors[] = "Données manquantes";
-    $response = array("success" => false, "errors" => $errors);
-    echo json_encode($response);
-    exit;
-}
+    $db = Database::getInstance();
 
-// Récupérer et vérifier les données
-$login = htmlspecialchars(trim($_POST['login']), ENT_QUOTES, 'UTF-8');
-$password = htmlspecialchars(trim($_POST['password']), ENT_QUOTES, 'UTF-8');
+    $stmt = $db->prepare('SELECT * FROM userlogin WHERE login = :login LIMIT 1');
+    $stmt->bindValue(':login', $login, PDO::PARAM_STR);
+    $stmt->execute();
 
-if (empty($login) || empty($password)) {
-    $errors[] = "Les données sont vides";
-}
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (empty($errors)) {
-    try {
-        require_once __DIR__ . '/config/database.php';
-
-        $db = Database::getInstance();
-
-        $stmt = $db->prepare("SELECT * FROM userlogin WHERE login = :login");
-        $stmt->bindParam(":login", $login);
-        $stmt->execute();
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            unset($user['password']);
-
-            $response = [
-                "success" => true,
-                "user" => $user
-            ];
-        } else {
-            $errors[] = "Login ou mot de passe invalide";
-        }
-    } catch (PDOException $e) {
-        error_log($e->getMessage());
-        $errors[] = "Erreur de connexion à la base de données";
+    if (!$user || !password_verify($password, (string) $user['password'])) {
+        jsonResponse(['success' => false, 'errors' => ['Login ou mot de passe invalide']], 401);
     }
-}
 
-if (!empty($errors)) {
-    $response = array("success" => false, "errors" => $errors);
-}
+    session_regenerate_id(true);
+    $_SESSION['user_login'] = (string) $user['login'];
+    $_SESSION['user_id'] = isset($user['id']) ? (string) $user['id'] : (string) $user['login'];
 
-echo json_encode($response);
-exit;
-?>
+    unset($user['password']);
+
+    jsonResponse([
+        'success' => true,
+        'user' => $user,
+        'csrfToken' => createCsrfToken(),
+    ]);
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+    jsonResponse(['success' => false, 'errors' => ['Erreur de connexion à la base de données']], 500);
+}

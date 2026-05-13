@@ -1,68 +1,130 @@
 <?php
-// Autoriser l'accès depuis n'importe quelle origine
-header("Access-Control-Allow-Origin: *");
-// Autoriser les méthodes GET, POST, OPTIONS
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-// Autoriser les en-têtes Content-Type et Authorization
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Initialisation des erreurs
-$errors = [];
+declare(strict_types=1);
 
-// Vérifier la méthode de requête
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Répondre à la méthode OPTIONS avec un statut 200 OK
-    http_response_code(200);
-    $errors[] = "Erreur au début"; // Erreur ajoutée pour le débogage
-    $response = array("success" => false, "errors" => $errors);
-    echo json_encode($response);
-    exit();
+require_once __DIR__ . '/security.php';
+
+configureSecurityHeaders();
+handlePreflightRequest();
+startSecureSession();
+requirePostRequest();
+
+$login = requireAuthenticatedUser();
+requireValidCsrfToken();
+
+function booleanPostValue(string $key): int
+{
+    $value = $_POST[$key] ?? false;
+
+    return in_array($value, ['1', 1, true, 'true', 'on', 'yes'], true) ? 1 : 0;
 }
 
-// Vérifier si les données ont été envoyées via POST
-if ($_SERVER["REQUEST_METHOD"] !== "POST" || empty($_POST["login"])) {
-    $errors[] = "Données manquantes";
-    $response = array("success" => false, "errors" => $errors);
-    echo json_encode($response);
-    exit;
-}
-
-// Récupérer les données du formulaire
-$isComing = isset($_POST['isComing']) && ($_POST['isComing'] === 'on' || $_POST['isComing'] === 'true') ? true : false;
-$isComingVIP = isset($_POST['isComingVIP']) && ($_POST['isComingVIP'] === 'on' || $_POST['isComingVIP'] === 'true') ? true : false;
-$isSleeping = isset($_POST['isSleeping']) && ($_POST['isSleeping'] === 'on' || $_POST['isSleeping'] === 'true') ? true : false;
-$partnerIsComing = isset($_POST['partnerIsComing']) && ($_POST['partnerIsComing'] === 'on' || $_POST['partnerIsComing'] === 'true') ? true : false;
-$partnerIsComingVIP = isset($_POST['partnerIsComingVIP']) && ($_POST['partnerIsComingVIP'] === 'on' || $_POST['partnerIsComingVIP'] === 'true') ? true : false;
-$partnerIsSleeping = isset($_POST['partnerIsSleeping']) && ($_POST['partnerIsSleeping'] === 'on' || $_POST['partnerIsSleeping'] === 'true') ? true : false;
-$kidsComing = isset($_POST['kidsComing']) ? (int)$_POST['kidsComing'] : 0;
-$login = htmlspecialchars(trim($_POST['login']), ENT_QUOTES, 'UTF-8');
+$participation = [
+    'isComing' => booleanPostValue('isComing'),
+    'isComingVIP' => booleanPostValue('isComingVIP'),
+    'isSleeping' => booleanPostValue('isSleeping'),
+    'partnerIsComing' => booleanPostValue('partnerIsComing'),
+    'partnerIsComingVIP' => booleanPostValue('partnerIsComingVIP'),
+    'partnerIsSleeping' => booleanPostValue('partnerIsSleeping'),
+    'kidsComing' => max(0, min(3, (int) ($_POST['kidsComing'] ?? 0))),
+];
 
 try {
     require_once __DIR__ . '/config/database.php';
 
     $db = Database::getInstance();
+    $db->beginTransaction();
 
-    $stmt = $db->prepare("SELECT * FROM userlogin WHERE login = :login");
-    $stmt->bindParam(":login", $login);
+    $stmt = $db->prepare('SELECT login, password, isVIP, hasChild, partnerFirstName FROM userlogin WHERE login = :login LIMIT 1');
+    $stmt->bindValue(':login', $login, PDO::PARAM_STR);
     $stmt->execute();
-
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-   if ($user) {
-        unset($user['password']);
-        $response = [
-            "success" => true,
-            "user" => $user
-        ];
-    } else {
-        $errors[] = "Utilisateur introuvable";
+    if (!$user) {
+        $db->rollBack();
+        jsonResponse(['success' => false, 'errors' => ['Utilisateur introuvable']], 404);
     }
-} catch (PDOException $e) {
-    error_log($e->getMessage());
-    $errors[] = "Erreur de connexion à la base de données";
-}
 
-// Retourner la réponse au format JSON
-echo json_encode($response);
-exit;
-?>
+    if ((int) ($user['isVIP'] ?? 0) !== 1) {
+        $participation['isComingVIP'] = 0;
+        $participation['partnerIsComingVIP'] = 0;
+    }
+
+    if (($user['hasChild'] ?? null) === null || (int) $user['hasChild'] === 0) {
+        $participation['kidsComing'] = 0;
+    }
+
+    if (($user['partnerFirstName'] ?? null) === null || trim((string) $user['partnerFirstName']) === '') {
+        $participation['partnerIsComing'] = 0;
+        $participation['partnerIsComingVIP'] = 0;
+        $participation['partnerIsSleeping'] = 0;
+    }
+
+    $existsStmt = $db->prepare('SELECT login FROM participations WHERE login = :login LIMIT 1');
+    $existsStmt->bindValue(':login', $login, PDO::PARAM_STR);
+    $existsStmt->execute();
+
+    if ($existsStmt->fetch(PDO::FETCH_ASSOC)) {
+        $saveStmt = $db->prepare(
+            'UPDATE participations
+             SET isComing = :isComing,
+                 isComingVIP = :isComingVIP,
+                 isSleeping = :isSleeping,
+                 partnerIsComing = :partnerIsComing,
+                 partnerIsComingVIP = :partnerIsComingVIP,
+                 partnerIsSleeping = :partnerIsSleeping,
+                 kidsComing = :kidsComing
+             WHERE login = :login'
+        );
+    } else {
+        $saveStmt = $db->prepare(
+            'INSERT INTO participations (
+                 login,
+                 isComing,
+                 isComingVIP,
+                 isSleeping,
+                 partnerIsComing,
+                 partnerIsComingVIP,
+                 partnerIsSleeping,
+                 kidsComing
+             ) VALUES (
+                 :login,
+                 :isComing,
+                 :isComingVIP,
+                 :isSleeping,
+                 :partnerIsComing,
+                 :partnerIsComingVIP,
+                 :partnerIsSleeping,
+                 :kidsComing
+             )'
+        );
+    }
+
+    $saveStmt->bindValue(':login', $login, PDO::PARAM_STR);
+    foreach ($participation as $field => $value) {
+        $saveStmt->bindValue(':' . $field, $value, PDO::PARAM_INT);
+    }
+    $saveStmt->execute();
+
+    $answerStmt = $db->prepare('UPDATE userlogin SET hasAnswered = 1 WHERE login = :login');
+    $answerStmt->bindValue(':login', $login, PDO::PARAM_STR);
+    $answerStmt->execute();
+
+    $db->commit();
+
+    unset($user['password']);
+    $user['hasAnswered'] = 1;
+
+    jsonResponse([
+        'success' => true,
+        'user' => $user,
+        'participation' => $participation,
+    ]);
+} catch (PDOException $e) {
+    if (isset($db) && $db instanceof PDO && $db->inTransaction()) {
+        $db->rollBack();
+    }
+
+    error_log($e->getMessage());
+    jsonResponse(['success' => false, 'errors' => ['Erreur lors de l’enregistrement de la participation']], 500);
+}
