@@ -34,37 +34,29 @@ if (empty($login) || empty($password)) {
 
 if (empty($errors)) {
     try {
-        // Connexion à la base de données
-        $db_host = 'axelnetstaff.mysql.db'; // Adresse de l'hôte de la base de données
-        $db_name = 'axelnetstaff'; // Nom de la base de données
-        $db_user = 'axelnetstaff'; // Nom d'utilisateur MySQL
-        $db_pass = 'Its2PeoplyOutside'; // Mot de passe MySQL
+        require_once __DIR__ . '/config/database.php';
 
-        $db = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db = Database::getInstance();
 
-        // Préparer et exécuter la requête SQL pour récupérer toutes les informations de l'utilisateur
         $stmt = $db->prepare("SELECT * FROM userlogin WHERE login = :login");
         $stmt->bindParam(":login", $login);
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Vérifier le mot de passe haché
-            if (password_verify($password, $user['password'])) {
-                // Supprimer le mot de passe de la réponse pour des raisons de sécurité
-                unset($user['password']);
+        if ($user && password_verify($password, $user['password'])) {
+            unset($user['password']);
 
-                $response = array("success" => true, "user" => $user);
-            } else {
-                $errors[] = "Login ou mot de passe invalide";
-            }
+            $response = [
+                "success" => true,
+                "user" => $user
+            ];
         } else {
             $errors[] = "Login ou mot de passe invalide";
         }
     } catch (PDOException $e) {
-        $errors[] = "Erreur de connexion à la base de données : " . $e->getMessage();
+        error_log($e->getMessage());
+        $errors[] = "Erreur de connexion à la base de données";
     }
 }
 
